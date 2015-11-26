@@ -1,10 +1,5 @@
 package hello;
 
-import java.util.LinkedList;
-
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 public class GreetingAlumno {
 	 	private final long id;
 //	    private Alumno alu;
