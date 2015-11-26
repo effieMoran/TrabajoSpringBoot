@@ -1,5 +1,6 @@
 package hello;
 
+import java.time.format.FormatStyle;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.support.StringMultipartFileEditor;
 
 import ch.qos.logback.classic.net.SyslogAppender;
 
@@ -68,13 +70,13 @@ public class GreetingController {
 	
 	//agrega alumno en la lista con los datos pasado por parametros por metodo POST 
 	@RequestMapping(value="/add", method = RequestMethod.POST)
-	public String greeting(@RequestParam(value="numLeg") String numLeg ,@RequestParam(value="name") String nombre, @RequestParam(value="apellido") String apellido,
-			@RequestParam(value="carrera")String carrera,@RequestParam(value="cantMat")String cantMat) {
+	public String greeting(@RequestParam(value="numLeg") String numLeg ,@RequestParam(value="name") String name, @RequestParam(value="lastname") String lastname,
+			@RequestParam(value="career")String career,@RequestParam(value="cantMat")String cantMat) {
 		try{
 			//cambio a int los parametros numLeg y cantMat
 			int numL = Integer.parseInt(numLeg);
 			int mat = Integer.parseInt(cantMat);
-			Alumno al = new Alumno(numL, nombre, apellido, carrera, mat);
+			Alumno al = new Alumno(numL, name, lastname, career, mat);
 			agregar(al);//agrega al alumno
 			return "agregado exitoso";//muestra msj q se agrego exitosamente
 		}catch(NullPointerException e){
@@ -92,6 +94,30 @@ public class GreetingController {
 		alumnos.remove(pos);//si lo encontro lo remueve y muestra el mensaje q se borro
 		return "Borrado exitoso";
 	}
+	
+	//modifica el alumno por metodo PUT
+	@RequestMapping(value="/{numLeg}/", method = RequestMethod.PUT)
+	public String greeting(@PathVariable int numLeg,@RequestParam(value="name",required=false) String name, @RequestParam(value="lastname",required=false) String lastname,
+			@RequestParam(value="career",required=false)String career,@RequestParam(value="cantMat",required=false)String cantMat){
+		int pos = buscar(numLeg);
+		if(pos!=-1){
+			if(name != null){//comprueba si hay parametro spring
+				alumnos.get(pos).setName(name);//setea el nombre
+			}
+			if(lastname != null){//comprueba si hay parametro spring
+				alumnos.get(pos).setLastname(lastname);//setea el apellido
+			}
+			if(career != null){//comprueba si hay parametro spring
+				alumnos.get(pos).setCareer(career);//setea carrera
+			}
+			if(cantMat != null){//comprueba si hay parametro spring
+				alumnos.get(pos).setCareer(cantMat);//setea cantidad de materias
+			}
+			return "modificacion exitosa del "+alumnos.get(pos);//muestra msj si se modifico el alumno y sus datos
+		}
+		return "ERROR almenos tiene que pasar una variable no nula";
+	}
+	
 	
 	///------->metodos correspondientes<-------///
 	//metodo de busqueda por numero de legajo

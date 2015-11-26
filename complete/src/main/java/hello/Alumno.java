@@ -9,62 +9,84 @@ public class Alumno {
 	
 	@NotNull
 	@Size(max = 60)
-	private String nombre;
+	private String name;
 	
 	@NotNull
 	@Size(max =60)
-	private String apellido;
+	private String lastname;
 	
 	@NotNull
-	private String carrera;
+	private String career;
 	
-	private int cantMaterias;
+	private int cantMat;
 	
 	
 	public Alumno(int numLega, String nombre, String apellido, String carrera, int cantMaterias) {
 		
 		this.numLega = numLega;
-		this.cantMaterias = cantMaterias;
-		this.nombre = nombre;
-		this.apellido = apellido;
-		this.carrera = carrera;
+		this.cantMat = cantMaterias;
+		this.name = nombre;
+		this.lastname = apellido;
+		this.career = carrera;
 	}
-	
+
+
 	public int getNumLega() {
 		return numLega;
 	}
+
+
 	public void setNumLega(int numLega) {
 		this.numLega = numLega;
 	}
-	public int getCantMaterias() {
-		return cantMaterias;
+
+
+	public String getName() {
+		return name;
 	}
-	public void setCantMaterias(int cantMaterias) {
-		this.cantMaterias = cantMaterias;
+
+
+	public void setName(String name) {
+		this.name = name;
 	}
-	public String getNombre() {
-		return nombre;
+
+
+	public String getLastname() {
+		return lastname;
 	}
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
 	}
-	public String getApellido() {
-		return apellido;
+
+
+	public String getCareer() {
+		return career;
 	}
-	public void setApellido(String apellido) {
-		this.apellido = apellido;
+
+
+	public void setCareer(String career) {
+		this.career = career;
 	}
-	public String getCarrera() {
-		return carrera;
+
+
+	public int getCantMat() {
+		return cantMat;
 	}
-	public void setCarrera(String carrera) {
-		this.carrera = carrera;
+
+
+	public void setCantMat(int cantMat) {
+		this.cantMat = cantMat;
 	}
+
+
 	@Override
 	public String toString() {
-		return "Numero de Legajo=" + numLega + ", apellido=" + apellido +  
-				", nombre=" + nombre + ", carrera=" + carrera+", cantMaterias=" + cantMaterias ;
+		return "numLega=" + numLega + ", name=" + name + ", lastname=" + lastname + ", career=" + career + ", cantMat=" + cantMat;
 	}
+	
+	
 	
 	
 }
