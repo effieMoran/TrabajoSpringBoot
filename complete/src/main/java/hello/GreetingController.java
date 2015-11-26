@@ -124,14 +124,14 @@ public class GreetingController {
 	public String greeting(@RequestParam(value="numleg") int numLeg){
 		try {
 			int pos=buscar(numLeg);//busca el alumno segun el numero de legajo
-			if(pos>=0){//si no lo encontro devuelve -1 el metodo
+			if(pos>=0){//si lo encontro el entero es positivo
 				alumnos.remove(pos);//si lo encontro lo remueve y muestra el mensaje q se borro
 				return "Borrado exitoso";
 			}
-			if(pos == -1){
+			if(pos == -1){//testea si no lo encontro
 				throw new ExcepcionDatos("Error no se encotro el alumno");
 			}
-			throw new ExcepcionDatos("Error lista vacia");
+			throw new ExcepcionDatos("Error lista vacia");//excepcion si la lista esta vacia
 			
 		} catch (ExcepcionDatos e) {
 			return e.getMessage();
