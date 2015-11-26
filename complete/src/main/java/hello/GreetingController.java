@@ -67,6 +67,15 @@ public class GreetingController {
     public Greeting greeting() {
 		return  new Greeting(counter.incrementAndGet(),alumnos);
     }
+	//muestra un alumno espesifico
+	@RequestMapping("/")
+	public String Greeting(@RequestParam(value="numLeg") int numLeg){
+		int pos = buscar(numLeg);
+		if (pos == -1) {
+			return "ERROR alumno no existe en la base de datos";
+		}
+		return "Alumno encontrado: "+alumnos.get(pos);
+	}
 	
 	//agrega alumno en la lista con los datos pasado por parametros por metodo POST 
 	@RequestMapping(value="/add", method = RequestMethod.POST)
