@@ -113,6 +113,8 @@ public class GreetingController {
 			}
 		} catch (ExcepcionDatos e) {
 			return e.getMessage();// si pasan un parametro nulo muestra respectiva exepcion
+		} catch (NumberFormatException ex) {
+			return "ingreso una letra o palabra y no un numero en el legajo";
 		}
 	}
 
@@ -132,6 +134,8 @@ public class GreetingController {
 
 		} catch (ExcepcionDatos e) {
 			return e.getMessage();
+		} catch (NumberFormatException ex) {
+			return "ingreso una letra o palabra en el numero de legajo";
 		}
 
 	}
@@ -175,6 +179,9 @@ public class GreetingController {
 			}
 			throw new ExcepcionDatos("Error lista vacia");
 
+		} catch (NumberFormatException e) {
+			
+			return new GreetingAlumno(counter.incrementAndGet(), "ingreso un numero en vez de ");
 		} catch (Exception e) {
 			return new GreetingAlumno(counter.incrementAndGet(), e.getMessage());
 		}
