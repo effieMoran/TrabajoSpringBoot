@@ -143,11 +143,11 @@ public class GreetingController {
 	// modifica el alumno por metodo PUT
 	@RequestMapping(value = "/{numLeg}/", method = RequestMethod.PUT)
 	public GreetingAlumno greeting(@PathVariable int numLeg , @RequestParam(value = "name", required = false) String name, @RequestParam(value = "lastname", required = false) String lastname,
-			@RequestParam(value = "career", required = false) String career, @RequestParam(value = "cantMat", required = false) int cantMat) {
+			@RequestParam(value = "career", required = false) String career, @RequestParam(value = "cantMat", required = false) String cantMat) {
 		try {
 			int pos = buscar(numLeg);
 			if (pos >= 0) {
-				if (name == null && lastname == null && career == null && cantMat <0) {
+				if (name == null && lastname == null && career == null && cantMat==null) {
 					return new GreetingAlumno(counter.incrementAndGet(), "ERROR TODOS LOS PARAMETROS SON NULOS ");
 				}
 				if (name != null) {// comprueba si hay parametro spring
@@ -159,8 +159,9 @@ public class GreetingController {
 				if (career != null) {// comprueba si hay parametro spring
 					alumnos.get(pos).setCareer(career);// setea carrera
 				}
-				if (cantMat >= 0) {// comprueba si hay parametro spring
-					alumnos.get(pos).setCantMat(cantMat);// setea cantidad de materias
+				if (cantMat !=null) {// comprueba si hay parametro spring
+					int mat = Integer.parseInt(cantMat);
+					alumnos.get(pos).setCantMat(mat);// setea cantidad de materias
 				}
 
 				GreetingAlumno alum = alumnos.get(pos);
