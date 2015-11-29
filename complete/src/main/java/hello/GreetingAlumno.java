@@ -14,7 +14,7 @@ public class GreetingAlumno {
 		
 		
 		public GreetingAlumno(long id, String coment) {
-			super();
+			
 			this.id = id;
 			this.coment = coment;
 		}
