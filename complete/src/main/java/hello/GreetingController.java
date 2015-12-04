@@ -115,7 +115,7 @@ public class GreetingController {
 
 	// borra alumno pasando el numero de legajo medienta a metodo DELETE
 	@RequestMapping(value = "/del", method = RequestMethod.DELETE)
-	public String greeting(@RequestParam(value = "numleg") int numLeg) {
+	public String greeting(@RequestParam(value = "numLeg") int numLeg) {
 		try {
 			int pos = buscar(numLeg);// busca el alumno segun el numero de legajo
 			if (pos >= 0) {// si no lo encontro devuelve -1 el metodo
