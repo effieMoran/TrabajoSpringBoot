@@ -2,7 +2,6 @@ package hello;
 
 public class GreetingAlumno {
 	 	private final long id;
-//	    private Alumno alu;
 //	    private final String coment;
 		private int numLega;
 		private String name;

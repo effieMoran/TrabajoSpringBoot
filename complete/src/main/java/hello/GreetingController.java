@@ -4,11 +4,13 @@ import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.ejb.access.EjbAccessException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestController
 public class GreetingController {
@@ -22,8 +24,7 @@ public class GreetingController {
 
 	// seteo la lista
 	// metodo para generar un numero random
-	// public static int generarNumero(int desde, int hasta){
-	// Random rnd = new Random();
+	// public static int generarNu<
 	// return rnd.nextInt(hasta-desde+1)+desde;
 	// }
 	// static{
@@ -56,9 +57,9 @@ public class GreetingController {
 	// muestra la lista de alumno por metodo GET
 	@RequestMapping("/alumno")
 	public LinkedList<GreetingAlumno> greeting() {
-		if (alumnos == null) {
+		if (alumnos == null||alumnos.isEmpty()) {
 			LinkedList<GreetingAlumno> pepe = new LinkedList<GreetingAlumno>();
-			GreetingAlumno error = new GreetingAlumno(counter.incrementAndGet(), "error lista vacia");
+			GreetingAlumno error = new GreetingAlumno(counter.incrementAndGet(), "ExcepcionBaseDeDatos : ERROR lista vacia");
 			pepe.add(error);
 			return pepe;
 		}
@@ -72,19 +73,13 @@ public class GreetingController {
 		try {
 			pos = buscar(numLeg);
 			if (pos >= 0) {
-				GreetingAlumno alum = alumnos.get(pos);
-				String name = alum.getName();
-				String lastname = alum.getLastname();
-				String career = alum.getCareer();
-				int cantMat = alum.getCantMat();
-
-				return new GreetingAlumno(counter.incrementAndGet(), numLeg, name, lastname, career, cantMat);
+				return alumnos.get(pos);
 
 			}
 			if (pos == -1) {
-				throw new ExcepcionDatos("Error no se encotro el alumno");
+				throw new ExcepcionDatos("ExcepcionBaseDeDatos : ERROR no se encotro el alumno");
 			}
-			throw new ExcepcionDatos("Error lista vacia");
+			throw new ExcepcionDatos("ExcepcionBaseDeDatos : ERROR lista vacia");
 
 		} catch (ExcepcionDatos e) {
 			return new GreetingAlumno(counter.incrementAndGet(), e.getMessage());
@@ -99,11 +94,11 @@ public class GreetingController {
 		try {
 			int numL = Integer.parseInt(numLeg);
 			if (buscar(numL) >= 0) {
-				return "ya existe el numero de legajo";
+				throw new ExcepcionDatos("ExcepcionDatos : ya existe el numero de legajo");
 			} else {
 				// cambio a int los parametros numLeg y cantMat
 				if ((name.equals("")) || (lastname.equals("")) || career.equals("") || cantMat.equals("")) {
-					throw new ExcepcionDatos("ExcepcionFaltanDatos : Es necesario completar todos los datos para crear un elemento nuevo");
+					throw new ExcepcionDatos("ExcepcionDatos : Es necesario completar todos los datos para crear un elemento nuevo");
 				}
 
 				int mat = Integer.parseInt(cantMat);
@@ -114,7 +109,7 @@ public class GreetingController {
 		} catch (ExcepcionDatos e) {
 			return e.getMessage();// si pasan un parametro nulo muestra respectiva exepcion
 		} catch (NumberFormatException ex) {
-			return "ingreso una letra o palabra y no un numero en el legajo";
+			return "ExcepcionDatos : Ingreso una letra o palabra y no un numero en el legajo";
 		}
 	}
 
@@ -128,14 +123,14 @@ public class GreetingController {
 				return "Borrado exitoso";
 			}
 			if (pos == -1) {
-				throw new ExcepcionDatos("Error no se encotro el alumno");
+				throw new ExcepcionDatos("ExcepcionDatos : Error no se encotro el alumno");
 			}
-			throw new ExcepcionDatos("Error lista vacia");
+			throw new ExcepcionDatos("ExcepcionDatos : Error lista vacia");
 
 		} catch (ExcepcionDatos e) {
 			return e.getMessage();
 		} catch (NumberFormatException ex) {
-			return "ingreso una letra o palabra en el numero de legajo";
+			return "ExcepcionDatos : Ingreso una letra o palabra en el numero de legajo";
 		}
 
 	}
@@ -148,7 +143,7 @@ public class GreetingController {
 			int pos = buscar(numLeg);
 			if (pos >= 0) {
 				if (name == null && lastname == null && career == null && cantMat==null) {
-					return new GreetingAlumno(counter.incrementAndGet(), "ERROR TODOS LOS PARAMETROS SON NULOS ");
+					throw new ExcepcionDatos("ExcepcionDatos : ERROR TODOS LOS PARAMETROS SON NULOS ");
 				}
 				if (name != null) {// comprueba si hay parametro spring
 					alumnos.get(pos).setName(name);// setea el nombre
@@ -161,29 +156,36 @@ public class GreetingController {
 				}
 				if (cantMat !=null) {// comprueba si hay parametro spring
 					int mat = Integer.parseInt(cantMat);
-					alumnos.get(pos).setCantMat(mat);// setea cantidad de materias
+					if (mat>=0) {
+						alumnos.get(pos).setCantMat(mat);// setea cantidad de materias
+					}else{
+						throw new ExcepcionDatos("ExcepcionDatos : ERROR INGRESO UN NUMERO NEGATIVO EN CANTIDAD DE MATERIAS ");
+					}
+					
 				}
 
-				GreetingAlumno alum = alumnos.get(pos);
+//				GreetingAlumno alum = alumnos.get(pos);
+//
+//				String n = alum.getName();
+//				String l = alum.getLastname();
+//				String c = alum.getCareer();
+//				int cM = alum.getCantMat();
 
-				String n = alum.getName();
-				String l = alum.getLastname();
-				String c = alum.getCareer();
-				int cM = alum.getCantMat();
-
-				return new GreetingAlumno(counter.incrementAndGet(), numLeg, n, l, c, cM);// muestra msj si se modifico el alumno y sus datos
+				return alumnos.get(pos);//new GreetingAlumno(counter.incrementAndGet(), numLeg, n, l, c, cM);// muestra msj si se modifico el alumno y sus datos
 			}
 
 			if (pos == -1) {
-				throw new ExcepcionDatos("Error no se encotro el alumno");
+				throw new ExcepcionDatos("ExcepcionDatos : Error no se encotro el alumno");
 			}
-			throw new ExcepcionDatos("Error lista vacia");
+			throw new ExcepcionDatos("ExcepcionDatos : Error lista vacia");
 
 		} catch (NumberFormatException e) {
 			
-			return new GreetingAlumno(counter.incrementAndGet(), "ingreso una letra o palabra en el numero de legajo ");
+			return new GreetingAlumno(counter.incrementAndGet(), "ExcepcionDatos : ingreso una letra o palabra en el numero de legajo ");
 		} catch (ExcepcionDatos e) {
 			return new GreetingAlumno(counter.incrementAndGet(), e.getMessage());
+		} catch (MethodArgumentTypeMismatchException e) {
+			return new GreetingAlumno(counter.incrementAndGet(), "ExcepcionDatos : no ingreso un legajo valido ");
 		}
 
 	}
